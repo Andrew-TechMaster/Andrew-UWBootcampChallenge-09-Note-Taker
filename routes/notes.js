@@ -1,6 +1,7 @@
 const notes = require('express').Router();
 const notesData = require('../db/db.json');
-const fs = require('fs');
+const FileHandler = require('../helpers/fileHandler');
+const fileHandler = new FileHandler();
 
 // GET Route for retrieving all the tips
 notes.get('/', (req, res) => {
@@ -20,22 +21,9 @@ notes.post('/', (req, res) => {
             title,
             text
         };
-
         const file = './db/db.json';
         
-        fs.readFile(file, 'utf8', (err, data) => {
-            if (err) {
-              console.error(err);
-            } else {
-              const parsedData = JSON.parse(data);
-              parsedData.push(newNote);
-              
-              fs.writeFile(file, JSON.stringify(parsedData, null, 4), (err) =>
-              err ? console.error(err) : console.info(`\nData written to ${file}`)
-            );
-            }
-          });
-
+        fileHandler.readThenAppend(newNote, file);
         res.json(`Note added successfully 🚀`);
     } else {
         res.status(400).error('Error in adding a note');
