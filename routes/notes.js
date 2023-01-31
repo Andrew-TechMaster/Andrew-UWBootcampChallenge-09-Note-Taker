@@ -9,6 +9,18 @@ notes.get('/', (req, res) => {
     res.json(notesData);
 });
 
+// GET Route for retrieving single tip by ID
+notes.get('/:noteId', (req, res) => {
+    console.info(`Getting note by id: ${req.params.noteId}`);
+    const found = notesData.some(n => n.id === parseInt(req.params.noteId));
+    if (found) {
+        const singleNote = notesData.filter(n => n.id === parseInt(req.params.noteId));
+        res.json(singleNote);
+    } else {
+        res.status(400).send(`No data found by your given id ${req.params.noteId}`);
+    }
+});
+
 // POST Route for a new UX/UI tip
 notes.post('/', (req, res) => {
     console.info(`${req.method} request received to add a note`);
