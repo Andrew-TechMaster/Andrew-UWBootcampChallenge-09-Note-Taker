@@ -16,21 +16,22 @@ app.use(express.static('public'));
 app.use('/api', api);
 
 // {========== Route ==========}
-// GET Route for homepage
+// <---------- GET Route for homepage ---------->
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-// GET Route for notes page
+// <---------- GET Route for notes page ---------->
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-// Wildcard route to direct users to a home page
+// <---------- Wildcard Route to direct users to a home page ---------->
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
+// {========== Start Listening ==========}
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
 );

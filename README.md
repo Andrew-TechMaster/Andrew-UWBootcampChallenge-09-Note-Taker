@@ -1,7 +1,7 @@
 # Andrew's Note Taker
 
 ## 🔎 Overview:
-> * Express.js project
+> * Express.js project for building RESTful API
 >
 > * Use "npm i" to install dependencies. Then use "node index" to start the server. Or use "npm run nodemon" for dev
 >
@@ -9,9 +9,11 @@
 >
 > * Implement HTTP GET, POST, DELETE methods
 >
+> * uuid module(in helpers folder) to generate unique for each generated note
+>
 > * Deployed on Heroku
 
-> **Note**: No HTTP PUT method. Unique Id generator and validator can be implemented in the future.
+> **Note**: No Http PUT method. Validator can be implemented in the future.
 >
 
 
@@ -29,18 +31,14 @@ https://whispering-retreat-81775.herokuapp.com/
 
 |![screentshot01](./assets/01.png)|
 |:--:| 
-| *Sample of the generated webpage* |
+| *Overview of the webpage* |
 
 |![screentshot02](./assets/02.png)|
 |:--:| 
-| *Prompted questions* |
+| *Using Insomnia for testing Api* |
 
-|![screentshot03](./assets/03.png)|
+|![screentshot03](./assets/ezgif.com-gif-maker.gif)|
 |:--:| 
-| *Passed all unit tests* |
-
-|![screentshot04](./assets/Team-Profile-Generator-With-Text.gif)|
-|:--:| 
-| *Short tutorial* |
+| *Short Demo* |
 - - -
 © 2023 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
