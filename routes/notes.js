@@ -3,15 +3,16 @@ const notesData = require('../db/db.json');
 const FileHandler = require('../helpers/fileHandler');
 const fileHandler = new FileHandler();
 
-// GET Route for retrieving all the tips
+// GET Route for retrieving all the notes
 notes.get('/', (req, res) => {
     console.info(`${req.method} request received for notes`);
     res.json(notesData);
 });
 
-// GET Route for retrieving single tip by ID
+// GET Route for retrieving single note by ID
 notes.get('/:noteId', (req, res) => {
     console.info(`Getting note by id: ${req.params.noteId}`);
+
     const found = notesData.some(n => n.id === parseInt(req.params.noteId));
     if (found) {
         const singleNote = notesData.filter(n => n.id === parseInt(req.params.noteId));
@@ -21,25 +22,45 @@ notes.get('/:noteId', (req, res) => {
     }
 });
 
-// POST Route for a new UX/UI tip
+// POST Route for a new note
 notes.post('/', (req, res) => {
     console.info(`${req.method} request received to add a note`);
     console.log(req.body);
 
     const { title, text } = req.body;
+    const newNoteId = notesData[notesData.length - 1].id + 1;
 
     if (req.body) {
         const newNote = {
+            id: newNoteId,
             title,
             text
         };
         const file = './db/db.json';
-        
+
         fileHandler.readThenAppend(newNote, file);
         res.json(`Note added successfully 🚀`);
     } else {
         res.status(400).error('Error in adding a note');
     }
+});
+
+// DELETE Route for deleting a note by Id
+notes.delete('/:noteId', (req, res) => {
+    console.info(`${req.method} request received to delete a note`);
+
+    const found = notesData.some(n => n.id === parseInt(req.params.noteId));
+    if (found) {
+        console.log(`Data with id ${req.params.noteId} has been already deleted`);
+        const remains = notesData.filter(n => n.id !== parseInt(req.params.noteId));
+        const file = './db/db.json';
+
+        fileHandler.writeToFile(file, remains);
+        res.json(`Notes with id ${req.params.noteId} has been already deleted`);
+    } else {
+        res.status(400).send(`Data with id ${req.params.noteId} cannot be found`);
+    }
+
 });
 
 module.exports = notes;
