@@ -1,6 +1,6 @@
 const notes = require('express').Router();
 const path = require('path');
-const notesData = require('../db/db.json');
+// const notesData = require('../db/db.json');
 const uuid = require('../helpers/uuid');
 const FileHandler = require('../helpers/fileHandler');
 const fileHandler = new FileHandler();
@@ -17,6 +17,17 @@ notes.get('/', (req, res) => {
 notes.get('/:noteId', (req, res) => {
     console.info(`Getting note by id: ${req.params.noteId}`);
 
+    const noteId = req.params.noteId;
+    fileHandler.readFromFile(filePath)
+        .then((data) => JSON.parse(data))
+        .then((json) => {
+            const result = json.filter((note) => note.id === noteId);
+            return result.length > 0
+                ? res.json(result)
+                : res.json('No tip with that ID');
+        });
+
+    /*
     // const found = notesData.some(n => n.id === parseInt(req.params.noteId));
     const found = notesData.some(n => n.id === req.params.noteId);
     if (found) {
@@ -24,8 +35,9 @@ notes.get('/:noteId', (req, res) => {
         const singleNote = notesData.filter(n => n.id === req.params.noteId);
         res.json(singleNote);
     } else {
-        res.status(400).send(`No data found by your given id ${req.params.noteId}`);
+        res.status(400).send(`No data found by the given id: ${req.params.noteId}`);
     }
+    */
 });
 
 // POST Route for a new note
@@ -74,6 +86,21 @@ notes.post('/', (req, res) => {
 notes.delete('/:noteId', (req, res) => {
     console.info(`${req.method} request received to delete a note`);
 
+    const noteId = req.params.noteId;
+    fileHandler.readFromFile(filePath)
+      .then((data) => JSON.parse(data))
+      .then((json) => {
+        // Make a new array of all notes except the one with the ID provided in the URL
+        const result = json.filter((note) => note.id !== noteId);
+  
+        // Save that array to the filesystem
+        fileHandler.writeToFile(filePath, result);
+  
+        // Respond to the DELETE request
+        res.json(`Item ${noteId} has been deleted 🗑️`);
+      });
+
+    /*
     // const found = notesData.some(n => n.id === parseInt(req.params.noteId));
     const found = notesData.some(n => n.id === req.params.noteId);
     if (found) {
@@ -86,7 +113,7 @@ notes.delete('/:noteId', (req, res) => {
     } else {
         res.status(400).send(`Data with id ${req.params.noteId} cannot be found`);
     }
-
+    */
 });
 
 module.exports = notes;
