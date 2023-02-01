@@ -1,4 +1,5 @@
 const notes = require('express').Router();
+const path = require('path');
 const notesData = require('../db/db.json');
 const FileHandler = require('../helpers/fileHandler');
 const fileHandler = new FileHandler();
@@ -36,9 +37,10 @@ notes.post('/', (req, res) => {
             title,
             text
         };
-        const file = './db/db.json';
+        // const file = './db/db.json';
+        const filePath =  path.join(__dirname, "../db/db.json");
 
-        fileHandler.readThenAppend(newNote, file);
+        fileHandler.readThenAppend(newNote, filePath);
         res.json(`Note added successfully 🚀`);
     } else {
         res.status(400).error('Error in adding a note');
@@ -53,9 +55,10 @@ notes.delete('/:noteId', (req, res) => {
     if (found) {
         console.log(`Data with id ${req.params.noteId} has been already deleted`);
         const remains = notesData.filter(n => n.id !== parseInt(req.params.noteId));
-        const file = './db/db.json';
+        // const file = './db/db.json';
+        const filePath =  path.join(__dirname, "../db/db.json");
 
-        fileHandler.writeToFile(file, remains);
+        fileHandler.writeToFile(filePath, remains);
         res.json(`Notes with id ${req.params.noteId} has been already deleted`);
     } else {
         res.status(400).send(`Data with id ${req.params.noteId} cannot be found`);
