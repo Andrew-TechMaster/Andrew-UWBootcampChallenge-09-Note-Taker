@@ -37,7 +37,7 @@ https://whispering-retreat-81775.herokuapp.com/
 |:--:| 
 | *Using Insomnia for testing Api* |
 
-|![screentshot03](./assets/ezgif.com-gif-maker.gif)|
+|![screentshot03](./assets/Note%20Taker.gif)|
 |:--:| 
 | *Short Demo* |
 - - -
