@@ -31,7 +31,7 @@ notes.post('/', (req, res) => {
     console.log(req.body);
 
     const { title, text } = req.body;
-    const newNoteId = notesData[notesData.length - 1].id + 1;
+    const newNoteId = parseInt(notesData[notesData.length - 1].id) + 1;
 
     if (req.body) {
         const newNote = {
