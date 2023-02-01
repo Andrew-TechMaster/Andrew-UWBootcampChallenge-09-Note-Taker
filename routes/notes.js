@@ -3,11 +3,13 @@ const path = require('path');
 const notesData = require('../db/db.json');
 const FileHandler = require('../helpers/fileHandler');
 const fileHandler = new FileHandler();
+const filePath =  path.join(__dirname, "../db/db.json");
 
 // GET Route for retrieving all the notes
 notes.get('/', (req, res) => {
     console.info(`${req.method} request received for notes`);
-    res.json(notesData);
+    // res.json(notesData);
+    fileHandler.readFromFile(filePath).then((data) => res.json(JSON.parse(data)));
 });
 
 // GET Route for retrieving single note by ID
@@ -38,7 +40,7 @@ notes.post('/', (req, res) => {
             text
         };
         // const file = './db/db.json';
-        const filePath =  path.join(__dirname, "../db/db.json");
+        // const filePath =  path.join(__dirname, "../db/db.json");
 
         fileHandler.readThenAppend(newNote, filePath);
         res.json(`Note added successfully 🚀`);
@@ -56,7 +58,7 @@ notes.delete('/:noteId', (req, res) => {
         console.log(`Data with id ${req.params.noteId} has been already deleted`);
         const remains = notesData.filter(n => n.id !== parseInt(req.params.noteId));
         // const file = './db/db.json';
-        const filePath =  path.join(__dirname, "../db/db.json");
+        // const filePath =  path.join(__dirname, "../db/db.json");
 
         fileHandler.writeToFile(filePath, remains);
         res.json(`Notes with id ${req.params.noteId} has been already deleted`);
