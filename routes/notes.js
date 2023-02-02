@@ -4,14 +4,12 @@ const path = require('path');
 const uuid = require('../helpers/uuid');
 const FileHandler = require('../helpers/fileHandler');
 const fileHandler = new FileHandler();
-const filePath = path.join(__dirname, "../db/db.json");
-
+const filePath = path.join(__dirname, '../db/db.json');
 
 // {========== Route ==========}
 // <---------- GET Route for retrieving all the notes ---------->
 notes.get('/', (req, res) => {
     console.info(`${req.method} request received for notes`);
-    // res.json(notesData);
     fileHandler.readFromFile(filePath).then((data) => res.json(JSON.parse(data)));
 });
 
@@ -24,9 +22,10 @@ notes.get('/:noteId', (req, res) => {
         .then((data) => JSON.parse(data))
         .then((json) => {
             const result = json.filter((note) => note.id === noteId);
+            const responseObj = { status: `Get a single note from db by ID:${noteId}`, data: result };
             return result.length > 0
-                ? res.json(result)
-                : res.json('No tip with that ID');
+                ? res.json(responseObj)
+                : res.json('No note with that ID');
         });
 });
 
@@ -44,7 +43,9 @@ notes.post('/', (req, res) => {
         };
 
         fileHandler.readThenAppend(newNote, filePath);
-        res.json(`Note added successfully 🚀 with unique ID:${newNote.id}`);
+
+        const responseObj = { status: `Note added successfully 🚀 with unique ID:${newNote.id}`, data: newNote };
+        res.status(201).json(responseObj);
     } else {
         res.status(400).error('Error in adding a note');
     }
@@ -57,17 +58,18 @@ notes.delete('/:noteId', (req, res) => {
     const noteId = req.params.noteId;
 
     fileHandler.readFromFile(filePath)
-      .then((data) => JSON.parse(data))
-      .then((json) => {
-        // Make a new array of all notes except the one with the ID provided in the URL
-        const result = json.filter((note) => note.id !== noteId);
-  
-        // Save that array to the filesystem
-        fileHandler.writeToFile(filePath, result);
-  
-        // Respond to the DELETE request
-        res.json(`Item with ID:${noteId} has been deleted 🗑️`);
-      });
+        .then((data) => JSON.parse(data))
+        .then((json) => {
+            // Make a new array of all notes except the one with the ID provided in the URL
+            const result = json.filter((note) => note.id !== noteId);
+
+            // Save that array to the filesystem
+            fileHandler.writeToFile(filePath, result);
+
+            // Respond to the DELETE request
+            const responseObj = { status: `Item with ID:${noteId} has been deleted 🗑️`, data: result };
+            res.status(200).json(responseObj);
+        });
 });
 
 // {========== Export ==========}

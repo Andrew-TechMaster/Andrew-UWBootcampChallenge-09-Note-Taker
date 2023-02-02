@@ -12,8 +12,22 @@ const filePath = path.join(__dirname, "../db/db.json");
 // <---------- GET Route for retrieving all the notes ---------->
 notes.get('/', (req, res) => {
     console.info(`${req.method} request received for notes`);
-    // res.json(notesData);
+    // res.status(200).json(notesData);
     fileHandler.readFromFile(filePath).then((data) => res.json(JSON.parse(data)));
+
+    // fileHandler.readFromFile(filePath).then((data) => JSON.parse(data))
+    //                                   .then((dataObj) => {
+    //                                     const responseObj = { status: "Extract all notes from db", body: dataObj };
+    //                                     res.status(200).json(responseObj);
+    //                                   })
+
+
+    // fileHandler.readFromFile(filePath).then((data) => {
+    //     const dataJson = data;
+    //     const dataObj = JSON.parse(dataJson);
+    //     const responseObj = { status: "Extract all notes from db", body: dataObj };
+    //     res.status(200).json(responseObj);
+    // });
 });
 
 // <---------- GET Route for retrieving single note by ID ---------->
@@ -92,17 +106,17 @@ notes.delete('/:noteId', (req, res) => {
     const noteId = req.params.noteId;
 
     fileHandler.readFromFile(filePath)
-      .then((data) => JSON.parse(data))
-      .then((json) => {
-        // Make a new array of all notes except the one with the ID provided in the URL
-        const result = json.filter((note) => note.id !== noteId);
-  
-        // Save that array to the filesystem
-        fileHandler.writeToFile(filePath, result);
-  
-        // Respond to the DELETE request
-        res.json(`Item ${noteId} has been deleted 🗑️`);
-      });
+        .then((data) => JSON.parse(data))
+        .then((json) => {
+            // Make a new array of all notes except the one with the ID provided in the URL
+            const result = json.filter((note) => note.id !== noteId);
+
+            // Save that array to the filesystem
+            fileHandler.writeToFile(filePath, result);
+
+            // Respond to the DELETE request
+            res.json(`Item ${noteId} has been deleted 🗑️`);
+        });
 
     /*
     // const found = notesData.some(n => n.id === parseInt(req.params.noteId));
